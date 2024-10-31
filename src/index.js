@@ -1,6 +1,8 @@
 const DURATION = 10; // 10 seconds
 let remainingTime = DURATION; // Countdown starting from 10
 let timer = null; // Variable to store the interval
+let timeout = null; // Variable to store the timeout (toast)
+let timeout2 = null; // Variable to store the timeout (toast)
 
 const timeDisplay = document.querySelector('#time');
 
@@ -9,31 +11,31 @@ const timeDisplay = document.querySelector('#time');
 const startButton = document.querySelector('#start-btn');
 startButton.addEventListener('click', () => {
 	timeDisplay.textContent = remainingTime;
+	toastCard.classList.remove('show');
 	startCountdown();
 });
 
 // ITERATION 2: Start Countdown
 function startCountdown() {
 	// Your code goes here ...
-	timeDisplay.textContent = remainingTime;
 	startButton.disabled = true;
+	timeDisplay.textContent = remainingTime;
+	handleTimer();
+	timer = setInterval(handleTimer, 1000);
 
-	timer = setInterval(() => {
+	function handleTimer() {
 		timeDisplay.textContent = remainingTime;
-		let message;
 
 		switch (remainingTime--) {
 			case 10:
-				message = '⏰ Final countdown!';
-				showToast(message);
+				clearTimeout(timeout);
+				showToast('⏰ Final countdown!');
 				break;
 			case 5:
-				message = 'Start the engines! 💥';
-				showToast(message);
+				showToast('Start the engines! 💥');
 				break;
 			case 0:
-				message = 'Lift off! 🚀';
-				showToast(message);
+				showToast('Lift off! 🚀');
 
 				remainingTime = DURATION;
 				startButton.disabled = false;
@@ -41,7 +43,7 @@ function startCountdown() {
 				clearInterval(timer);
 				break;
 		}
-	}, 1000);
+	}
 }
 
 // ITERATION 3: Show Toast
@@ -50,11 +52,9 @@ const toastMessageDisplay = document.querySelector('#toast-message');
 const closeToastButton = document.querySelector('#close-toast');
 
 closeToastButton.addEventListener('click', () => {
-	clearTimeout(timeoutID);
 	toastCard.classList.remove('show');
+	clearTimeout(timeout);
 });
-
-let timeoutID;
 
 function showToast(message) {
 	// Your code goes here ...
@@ -63,7 +63,9 @@ function showToast(message) {
 
 	// BONUS: ITERATION 4: TOAST CLOSE BUTTON
 	// Your code goes here ...
-	timeoutID = setTimeout(() => {
+	clearTimeout(timeout);
+
+	timeout = setTimeout(() => {
 		toastCard.classList.remove('show');
 	}, 3000);
 }
